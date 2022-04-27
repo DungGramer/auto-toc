@@ -1,15 +1,21 @@
-function toc(scope, tocSelector) {
+function toc(scope, tocSelector, from, to) {
   let tocElement = document.querySelector(tocSelector);
   let scopeElement = document.querySelector(scope) || document.body;
 
+  let headingSelector = '';
+  for (let i = from; i <= to; i++) {
+    headingSelector += `h${i},`;
+  }
+  headingSelector = headingSelector.slice(0, -1);
+
   // Get all h1 - h6 elements
-  let headings = scopeElement.querySelectorAll('h1, h2, h3, h4, h5, h6');
+  let headings = scopeElement.querySelectorAll(headingSelector);
   
   // Create a list to hold the headings
   let toc = document.createElement('ol');
 
   const tocTree = [{
-    level: 0,
+    level: from,
     scope: toc
   }];
 
@@ -19,51 +25,78 @@ function toc(scope, tocSelector) {
     let headingLevel = heading.tagName.substr(1);
 
     let prevToc = tocTree[tocTree.length - 1];
+
     
-    if (headingLevel > prevToc.level) {
+    if (prevToc.level < headingLevel) {
       // Create a new list item
       let ol = document.createElement('ol');
 
       createTocElement(ol, headingContent);
 
       // Add the list item to the list
-      tocTree[0].scope.appendChild(ol);
+      prevToc.scope.appendChild(ol);
 
       // Add the list to the tree
       tocTree.push({
-        level: headingLevel,
+        level: +headingLevel,
         scope: ol
       });
-    } else if (headingLevel < prevToc.level) {
-      // Remove the last list from the tree
-      tocTree.pop();
-      console.log(`📕 tocTree - 40:toc.js \n`, tocTree);
+    } else if (prevToc.level > headingLevel) {
 
       // Get the last list from the tree
-      let prevToc = tocTree[tocTree.length - 1];
+      let parentToc = findParent(tocTree, headingLevel);
+      console.log(parentToc);
+      
 
+      if (parentToc) {
+        createTocElement(parentToc, headingContent);
+
+        tocTree.push({
+          level: +headingLevel,
+          scope: parentToc
+        });
+      } else {
+        let ol = document.createElement('ol');
+        createTocElement(ol, headingContent);
+        prevToc.scope.appendChild(ol);
+
+        tocTree.push({
+          level: +headingLevel,
+          scope: ol
+        });
+      }
+
+    } else {
       createTocElement(prevToc.scope, headingContent);
 
       // Add the list to the tree
       tocTree.push({
-        level: headingLevel,
+        level: +headingLevel,
         scope: prevToc.scope
       });
-    } else {
-      createTocElement(prevToc.scope, headingContent);
     }
 
+    console.log(`📕 tocTree - 60:toc.js \n`, tocTree);
 
   });
 
   // Append the list to the toc element
   tocElement.appendChild(toc);
+
+  function findParent(tocTree, level) {
+    for (let i = tocTree.length - 1; i >= 0; i--) {
+      if (Number(tocTree[i].level) === Number(level)) {
+        return tocTree[i].scope;
+      }
+    }
+  
+    return toc;
+  }
 }
 
 function createTocElement(selector, headingContent) {
   // Create a new list item
   let li = document.createElement('li');
-  let heading = selector.tagName;
 
   // Create a link to the heading
   let a = document.createElement('a');
@@ -77,5 +110,5 @@ function createTocElement(selector, headingContent) {
   selector.insertAdjacentHTML('beforeend', li.outerHTML);
 }
 
-toc('main', '#toc');
+toc('main', '#toc', 2, 6);
 
