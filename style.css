@@ -41,3 +41,7 @@ article h2::before {
 ul {
     list-style-type: none;
 }
+
+li.active {
+    color: red;
+}

@@ -1,4 +1,10 @@
-function toc(scope = "body", tocSelector, from = 2, to = 6) {
+function toc(props) {
+  const scope = props.scope || "body";
+  const tocSelector = props.tocSelector;
+  const from = props.from || 2;
+  const to = props.to || 6;
+  const scrollMargin = props.scrollMargin || 100;
+
   const tocElement = document.querySelector(tocSelector);
   const scopeElement = document.querySelector(scope);
 
@@ -11,20 +17,16 @@ function toc(scope = "body", tocSelector, from = 2, to = 6) {
 
   headings.forEach((heading) => {
     const headingLevel = Number(heading.tagName.slice(1));
-
     const prevToc = tocTree[tocTree.length - 1];
 
     if (prevToc.level < headingLevel) {
-      // Create a new list item
       const ul = document.createElement("ul");
       createTocElement(ul, heading);
 
-      // Add the list item to the list
       prevToc.scope.appendChild(ul);
       tocTree.push({ level: headingLevel, scope: ul });
     } else if (prevToc.level > headingLevel) {
-      // Get the last list from the tree
-      const parentToc = findParent(tocTree, headingLevel);
+      const parentToc = findParentScope(tocTree, headingLevel);
 
       createTocElement(parentToc, heading);
       tocTree.push({ level: headingLevel, scope: parentToc });
@@ -37,9 +39,9 @@ function toc(scope = "body", tocSelector, from = 2, to = 6) {
   // Append the list to the toc element
   tocElement.appendChild(toc);
 
-  function findParent(tocTree, level) {
+  function findParentScope(tocTree, level) {
     for (let i = tocTree.length - 1; i >= 0; i--) {
-      if (Number(tocTree[i].level) === Number(level)) {
+      if (tocTree[i].level === level) {
         return tocTree[i].scope;
       }
     }
@@ -70,9 +72,5 @@ function createTocElement(selector, heading) {
 
   // Add the link to the li item
   li.appendChild(a);
-
-  // Add the li item to the list
   selector.appendChild(li);
 }
-
-toc("main", "#toc", 2);
