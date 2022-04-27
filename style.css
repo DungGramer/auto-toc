@@ -45,3 +45,8 @@ ul {
 li.active {
     color: red;
 }
+
+#toc {
+    position: fixed;
+    left: 0;
+}

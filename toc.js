@@ -11,6 +11,15 @@ function toc(props) {
   // Get all h-from - h-to elements
   const headings = queryAllHeadings();
 
+  headings.forEach(heading => {
+    document.addEventListener('scroll', () => {
+      if (heading.getBoundingClientRect().top > 300) {
+        // window.scrollBy(0, heading.getBoundingClientRect().top - scrollMargin);
+        heading.style.color = 'red';
+      }
+    })
+  })
+
   // Create a list to hold the headings
   const toc = document.createElement("ol");
   const tocTree = [{ level: from, scope: toc }];
