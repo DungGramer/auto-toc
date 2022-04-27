@@ -1,83 +1,37 @@
-function toc(scope, tocSelector, from, to) {
-  let tocElement = document.querySelector(tocSelector);
-  let scopeElement = document.querySelector(scope) || document.body;
+function toc(scope = "body", tocSelector, from = 2, to = 6) {
+  const tocElement = document.querySelector(tocSelector);
+  const scopeElement = document.querySelector(scope);
 
-  let headingSelector = '';
-  for (let i = from; i <= to; i++) {
-    headingSelector += `h${i},`;
-  }
-  headingSelector = headingSelector.slice(0, -1);
+  // Get all h-from - h-to elements
+  const headings = queryAllHeadings();
 
-  // Get all h1 - h6 elements
-  let headings = scopeElement.querySelectorAll(headingSelector);
-  
   // Create a list to hold the headings
-  let toc = document.createElement('ol');
+  const toc = document.createElement("ol");
+  const tocTree = [{ level: from, scope: toc }];
 
-  const tocTree = [{
-    level: from,
-    scope: toc
-  }];
+  headings.forEach((heading) => {
+    const headingLevel = Number(heading.tagName.slice(1));
 
-  // Loop through each heading
-  headings.forEach(heading => {
-    let headingContent = heading.textContent;
-    let headingLevel = heading.tagName.substr(1);
+    const prevToc = tocTree[tocTree.length - 1];
 
-    let prevToc = tocTree[tocTree.length - 1];
-
-    
     if (prevToc.level < headingLevel) {
       // Create a new list item
-      let ol = document.createElement('ol');
-
-      createTocElement(ol, headingContent);
+      const ul = document.createElement("ul");
+      createTocElement(ul, heading);
 
       // Add the list item to the list
-      prevToc.scope.appendChild(ol);
-
-      // Add the list to the tree
-      tocTree.push({
-        level: +headingLevel,
-        scope: ol
-      });
+      prevToc.scope.appendChild(ul);
+      tocTree.push({ level: headingLevel, scope: ul });
     } else if (prevToc.level > headingLevel) {
-
       // Get the last list from the tree
-      let parentToc = findParent(tocTree, headingLevel);
-      console.log(parentToc);
-      
+      const parentToc = findParent(tocTree, headingLevel);
 
-      if (parentToc) {
-        createTocElement(parentToc, headingContent);
-
-        tocTree.push({
-          level: +headingLevel,
-          scope: parentToc
-        });
-      } else {
-        let ol = document.createElement('ol');
-        createTocElement(ol, headingContent);
-        prevToc.scope.appendChild(ol);
-
-        tocTree.push({
-          level: +headingLevel,
-          scope: ol
-        });
-      }
-
+      createTocElement(parentToc, heading);
+      tocTree.push({ level: headingLevel, scope: parentToc });
     } else {
-      createTocElement(prevToc.scope, headingContent);
-
-      // Add the list to the tree
-      tocTree.push({
-        level: +headingLevel,
-        scope: prevToc.scope
-      });
+      createTocElement(prevToc.scope, heading);
+      tocTree.push({ level: headingLevel, scope: prevToc.scope });
     }
-
-    console.log(`📕 tocTree - 60:toc.js \n`, tocTree);
-
   });
 
   // Append the list to the toc element
@@ -89,26 +43,36 @@ function toc(scope, tocSelector, from, to) {
         return tocTree[i].scope;
       }
     }
-  
+
     return toc;
+  }
+
+  function queryAllHeadings() {
+    let headingSelector = "";
+    for (let i = from; i <= to; ++i) {
+      headingSelector += `h${i},`;
+    }
+
+    return scopeElement.querySelectorAll(headingSelector.slice(0, -1));
   }
 }
 
-function createTocElement(selector, headingContent) {
-  // Create a new list item
-  let li = document.createElement('li');
+function createTocElement(selector, heading) {
+  const li = document.createElement("li");
+  const a = document.createElement("a");
+  a.textContent = heading.textContent;
 
-  // Create a link to the heading
-  let a = document.createElement('a');
-  a.textContent = headingContent;
-  a.href = `#${selector?.id}`;
+  heading.id ||= `${heading.textContent
+    .replace(/\s/g, "-")
+    .toLowerCase()}-${Math.random().toString(36).substring(2, 15)}`;
 
-  // Add the link to the list item
+  a.href = `#${heading.id}`;
+
+  // Add the link to the li item
   li.appendChild(a);
 
-  // Add the list item to the list
-  selector.insertAdjacentHTML('beforeend', li.outerHTML);
+  // Add the li item to the list
+  selector.appendChild(li);
 }
 
-toc('main', '#toc', 2, 6);
-
+toc("main", "#toc", 2);
