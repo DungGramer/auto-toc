@@ -53,6 +53,8 @@ a:hover,
 a:active, a:-webkit-any-link {
   text-decoration: none;
   color: inherit;
+  will-change: color;
+  transition: color ease-in-out;
 }
 
 html {

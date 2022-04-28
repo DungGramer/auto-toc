@@ -41,8 +41,6 @@ function toc(props) {
 
   scrollHighLight();
 
-  
-
   function findParentScope(tocTree, level) {
     for (let i = tocTree.length - 1; i >= 0; i--) {
       if (tocTree[i].level === level) {
@@ -87,26 +85,82 @@ function toc(props) {
   }
 
   function scrollHighLight() {
+    // for (let i = 0; i < headings.length; i++) {
+    //   const heading = headings[i];
+    //   const elementToc = tocTree[i].selector;
+
+    //   function highlight() {
+    //     let { top, bottom } = heading.getBoundingClientRect();
+    //     bottom = Math.round(bottom) + 1;
+    //     top = Math.round(top);
+    //     const windowHeight = (window.innerHeight * 0.7 + document.documentElement.scrollTop * 0.1) - scrollMargin;
+
+    //     if (bottom <= windowHeight) {
+    //       setsColor("red", heading, elementToc);
+    //     }
+    //     if (bottom <= 0 || top >= windowHeight) {
+    //       setsColor("black", heading, elementToc);
+    //     }
+
+    //   }
+
+    //   // Add event listener to scroll
+    //   highlight(); // Run on load
+    //   document.addEventListener("scroll", highlight);
+    // }
+
+    // const observer = new IntersectionObserver(
+    //   (entries) => {
+    //     entries.forEach((entry) => {
+    //       const tocLink = document.querySelector(`a[href="#${entry.target.id}"]`);
+    //       console.log(`📕 entry - 117:toc.js \n`, entry);
+
+    //       // 30% of height screen
+    //       const rangeView = entry.rootBounds.height * 0.3;
+
+    //       // Show when over rangeView
+    //       if (entry.isIntersecting) {
+    //         setsColor("red", entry.target, tocLink);
+    //       } else {
+    //         setsColor("black", entry.target, tocLink);
+    //       }
+    //     });
+    //   },
+    //   {
+    //     threshold: 0.5,
+    //     rootMargin: `${scrollMargin}px`,
+    //   }
+    // );
+
+    // headings.forEach((heading) => {
+    //   observer.observe(heading);
+    // });
+
+    const spacing = [];
+    for (let i = 0; i < headings.length - 2; ++i) {
+      spacing.push(
+        headings[i + 1].getBoundingClientRect().top -
+          headings[i].getBoundingClientRect().bottom
+      );
+    }
+    spacing.push(0);
+
     for (let i = 0; i < headings.length; i++) {
       const heading = headings[i];
       const elementToc = tocTree[i].selector;
-  
+
       function highlight() {
         let { top, bottom } = heading.getBoundingClientRect();
-        bottom = Math.round(bottom) + 1;
-        top = Math.round(top);
-        const windowHeight = window.innerHeight - scrollMargin;
-  
-        console.log(`📕 bottom - 52:toc.js \n`, bottom, windowHeight);
-  
-        if (bottom <= windowHeight) {
+        const scope = bottom + spacing[i] - scrollMargin;
+
+        if (scope <= document.documentElement.scrollTop) {
           setsColor("red", heading, elementToc);
         }
-        if (bottom <= 0 || top >= windowHeight) {
+        if (scope <= 0 || scope >= document.documentElement.scrollTop) {
           setsColor("black", heading, elementToc);
         }
       }
-  
+
       // Add event listener to scroll
       highlight(); // Run on load
       document.addEventListener("scroll", highlight);
