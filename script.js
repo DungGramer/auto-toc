@@ -2,5 +2,5 @@ toc({
   scope: 'main',
   tocSelector: '#toc',
   from: 2,
-  scrollMargin: 100,
+  scrollMargin: 0,
 });

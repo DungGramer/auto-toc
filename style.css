@@ -15,9 +15,6 @@ html {
 body {
   margin: auto;
 }
-a:link {
-  color: inherit;
-}
 footer {
   margin-bottom: 30px;
 }
@@ -39,14 +36,29 @@ article h2::before {
 }
 
 ul {
-    list-style-type: none;
+  list-style-type: none;
 }
 
 li.active {
-    color: red;
+  color: red;
 }
 
 #toc {
-    position: fixed;
-    left: 0;
+  position: fixed;
+  left: 0;
+}
+a,
+a:visited,
+a:hover,
+a:active, a:-webkit-any-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+html {
+    scroll-padding-block: 150px;
+}
+
+.highlight {
+  color: red;
 }
