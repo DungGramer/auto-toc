@@ -88,75 +88,80 @@ function toc(props) {
     // for (let i = 0; i < headings.length; i++) {
     //   const heading = headings[i];
     //   const elementToc = tocTree[i].selector;
-
     //   function highlight() {
     //     let { top, bottom } = heading.getBoundingClientRect();
     //     bottom = Math.round(bottom) + 1;
     //     top = Math.round(top);
     //     const windowHeight = (window.innerHeight * 0.7 + document.documentElement.scrollTop * 0.1) - scrollMargin;
-
     //     if (bottom <= windowHeight) {
     //       setsColor("red", heading, elementToc);
     //     }
     //     if (bottom <= 0 || top >= windowHeight) {
     //       setsColor("black", heading, elementToc);
     //     }
-
     //   }
-
     //   // Add event listener to scroll
     //   highlight(); // Run on load
     //   document.addEventListener("scroll", highlight);
     // }
+    //   const observer = new IntersectionObserver(
+    //     (entries) => {
+    //       entries.forEach((entry) => {
+    //         const tocLink = document.querySelector(`a[href="#${entry.target.id}"]`);
+    //         // Show when over rangeView
+    //         if (entry.intersectionRatio > 0) {
+    //           setsColor("red", entry.target, tocLink);
+    //         } else {
+    //           setsColor("black", entry.target, tocLink);
+    //         }
+    //       });
+    //     },
+    //     {
+    //       threshold: 0.5,
+    //       rootMargin: `${scrollMargin}px`,
+    //     }
+    //   );
+    //   headings.forEach((heading) => {
+    //     observer.observe(heading);
+    //   });
+    // }
 
-    // const observer = new IntersectionObserver(
-    //   (entries) => {
-    //     entries.forEach((entry) => {
-    //       const tocLink = document.querySelector(`a[href="#${entry.target.id}"]`);
-    //       console.log(`📕 entry - 117:toc.js \n`, entry);
+    const spacings = [];
+    
+    for (let i = 0; i < headings.length - 1; i++) {
+      const current = headings[i];
+      const next = headings[i + 1];
+      spacings.push({
+        height: next.getBoundingClientRect().top - current.getBoundingClientRect().bottom,
+        bottom: current.getBoundingClientRect().bottom,
+      });
 
-    //       // 30% of height screen
-    //       const rangeView = entry.rootBounds.height * 0.3;
-
-    //       // Show when over rangeView
-    //       if (entry.isIntersecting) {
-    //         setsColor("red", entry.target, tocLink);
-    //       } else {
-    //         setsColor("black", entry.target, tocLink);
-    //       }
-    //     });
-    //   },
-    //   {
-    //     threshold: 0.5,
-    //     rootMargin: `${scrollMargin}px`,
-    //   }
-    // );
-
-    // headings.forEach((heading) => {
-    //   observer.observe(heading);
-    // });
-
-    const spacing = [];
-    for (let i = 0; i < headings.length - 2; ++i) {
-      spacing.push(
-        headings[i + 1].getBoundingClientRect().top -
-          headings[i].getBoundingClientRect().bottom
-      );
     }
-    spacing.push(0);
+    console.log(`📕 spacings - 130:toc.js \n`, spacings);
 
+    for (let i = 0; i < headings.length - 1; i++) {
+      const div = document.createElement("div");
+      div.className = "overlay";
+      div.style.top = `${spacings[i].bottom}px`;
+      div.style.height = `${spacings[i].height}px`;
+      
+      document.body.appendChild(div);
+    }
+    
     for (let i = 0; i < headings.length; i++) {
       const heading = headings[i];
+      const nextHeading = headings[(i + 1 < headings.length) ? i + 1 : i];
       const elementToc = tocTree[i].selector;
 
       function highlight() {
-        let { top, bottom } = heading.getBoundingClientRect();
-        const scope = bottom + spacing[i] - scrollMargin;
+        const height = nextHeading.getBoundingClientRect().top - heading.getBoundingClientRect().bottom;
+        const { bottom, top } = heading.getBoundingClientRect();
+        console.log(`📕 bottom - 159:toc.js \n`, bottom);
 
-        if (scope <= document.documentElement.scrollTop) {
+        // const scope = ((bottom + height));
+        if (bottom < window.innerHeight && top + height > 0) {
           setsColor("red", heading, elementToc);
-        }
-        if (scope <= 0 || scope >= document.documentElement.scrollTop) {
+        } else if (top + height < 0 || bottom > window.innerHeight) {
           setsColor("black", heading, elementToc);
         }
       }
@@ -164,6 +169,7 @@ function toc(props) {
       // Add event listener to scroll
       highlight(); // Run on load
       document.addEventListener("scroll", highlight);
+
     }
   }
 }
