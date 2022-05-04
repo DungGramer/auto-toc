@@ -126,6 +126,7 @@ function toc(props) {
     //   });
     // }
 
+    //< Debug
     const spacings = [];
     
     for (let i = 0; i < headings.length - 1; i++) {
@@ -147,6 +148,7 @@ function toc(props) {
       
       document.body.appendChild(div);
     }
+    ///> Debug
     
     for (let i = 0; i < headings.length; i++) {
       const heading = headings[i];
@@ -154,14 +156,20 @@ function toc(props) {
       const elementToc = tocTree[i].selector;
 
       function highlight() {
-        const height = nextHeading.getBoundingClientRect().top - heading.getBoundingClientRect().bottom;
-        const { bottom, top } = heading.getBoundingClientRect();
-        console.log(`📕 bottom - 159:toc.js \n`, bottom);
+        let { bottom, top } = heading.getBoundingClientRect();
+        const {marginBottom, marginTop, paddingBottom, paddingTop} = window.getComputedStyle(heading);
+        bottom = Math.round(bottom + parseInt(marginBottom) + parseInt(paddingBottom));
+        top = Math.round(top + parseInt(marginTop) + parseInt(paddingTop));
+
+        const scope = nextHeading.getBoundingClientRect().top - bottom;
+        const scopeSplit = (scope * scrollMargin) / 100;
+        const scopeCanView = scope - scopeSplit;
+        const windowHeight = window.innerHeight;
 
         // const scope = ((bottom + height));
-        if (bottom < window.innerHeight && top + height > 0) {
+        if (bottom + scopeCanView <= windowHeight && top + scopeSplit >= 0) {
           setsColor("red", heading, elementToc);
-        } else if (top + height < 0 || bottom > window.innerHeight) {
+        } else if (top + scopeSplit <= 0 || bottom > windowHeight) {
           setsColor("black", heading, elementToc);
         }
       }

@@ -5,6 +5,6 @@ document.addEventListener("DOMContentLoaded", function() {
     scope: 'main',
     tocSelector: '#toc',
     from: 2,
-    scrollMargin: 300,
+    scrollMargin: 70,
   });
 });
