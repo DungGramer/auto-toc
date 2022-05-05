@@ -74,12 +74,12 @@ function toc(props) {
   function createTocElement(selector, heading) {
     const li = document.createElement("li");
     const a = document.createElement("a");
-    a.textContent = heading.textContent;
-
+    
     heading.id ||= `${heading.textContent
       .replace(/\s/g, "-")
       .toLowerCase()}-${Math.random().toString(36).substring(2, 15)}`;
-
+      
+    a.textContent = heading.textContent;
     a.href = `#${heading.id}`;
 
     // Add the link to the li item
@@ -89,33 +89,7 @@ function toc(props) {
     return a;
   }
 
-  function scrollHighLight() {
-
-    /*< Debug
-    const spacings = [];
-    
-    for (let i = 0; i < headings.length - 1; i++) {
-      const current = headings[i];
-      const next = headings[i + 1];
-      spacings.push({
-        height: next.getBoundingClientRect().top - current.getBoundingClientRect().bottom,
-        bottom: current.getBoundingClientRect().bottom,
-      });
-
-    }
-    console.log(`📕 spacings - 130:toc.js \n`, spacings);
-
-    for (let i = 0; i < headings.length - 1; i++) {
-      const div = document.createElement("div");
-      div.className = "overlay";
-      div.style.top = `${spacings[i].bottom}px`;
-      div.style.height = `${spacings[i].height}px`;
-      
-      document.body.appendChild(div);
-    }
-    *///> Debug
-    console.log(`📕 tocTree - 133:toc.js \n`, tocTree);
-    
+  function scrollHighLight() {   
     for (let i = 0; i < headings.length; i++) {
       const heading = headings[i];
       const safeNextIndex = (i + 1 < headings.length) ? i + 1 : i;
@@ -132,6 +106,7 @@ function toc(props) {
         const scope = nextHeading.getBoundingClientRect().top - bottom;
         const scopeSplit = (scope * scrollMargin) / 100;
         const scopeCanView = scope - scopeSplit;
+
         const windowHeight = window.innerHeight;
 
         if (bottom + scopeCanView <= windowHeight && top + scopeSplit >= 0) {
