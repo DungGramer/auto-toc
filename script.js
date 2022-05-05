@@ -1,10 +1,9 @@
-// ContenttypeReady
-
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", () => {
   toc({
     scope: 'main',
     tocSelector: '#toc',
     from: 2,
-    scrollMargin: 70,
+    scrollMargin: '70%',
+    parentHighlight: true,
   });
 });

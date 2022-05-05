@@ -3,7 +3,8 @@ function toc(props) {
   const tocSelector = props.tocSelector;
   const from = props.from || 2;
   const to = props.to || 6;
-  const scrollMargin = props.scrollMargin || 0;
+  const scrollMargin = parseInt(props.scrollMargin) || 100;
+  const parentHighlight = props.parentHighlight || false;
 
   const tocElement = document.querySelector(tocSelector);
   const scopeElement = document.querySelector(scope);
@@ -21,20 +22,22 @@ function toc(props) {
 
     if (prevToc.level < headingLevel) {
       const ul = document.createElement("ul");
-      createTocElement(ul, heading);
+      const a = createTocElement(ul, heading);
 
       prevToc.scope.appendChild(ul);
-      tocTree.push({ level: headingLevel, scope: ul });
+      tocTree.push({ level: headingLevel, scope: ul, selector: a, parent: tocTree.at(-1).selector });
     } else if (prevToc.level > headingLevel) {
       const parentToc = findParentScope(tocTree, headingLevel);
 
-      createTocElement(parentToc, heading);
-      tocTree.push({ level: headingLevel, scope: parentToc });
+      const a = createTocElement(parentToc, heading);
+      tocTree.push({ level: headingLevel, scope: parentToc, selector: a });
     } else {
-      createTocElement(prevToc.scope, heading);
-      tocTree.push({ level: headingLevel, scope: prevToc.scope });
+      const a = createTocElement(prevToc.scope, heading);
+      tocTree.push({ level: headingLevel, scope: prevToc.scope, selector: a, ...(prevToc.parent && { parent: prevToc.parent })});
     }
   });
+
+  tocTree.shift();
 
   // Append the list to the toc element
   tocElement.appendChild(toc);
@@ -53,7 +56,9 @@ function toc(props) {
 
   function setsColor(color, ...elements) {
     elements.forEach((element) => {
-      element.style.color = color;
+      if (element !== undefined) {
+        element.style.color = color;
+      }
     });
   }
 
@@ -81,52 +86,12 @@ function toc(props) {
     li.appendChild(a);
     selector.appendChild(li);
 
-    tocTree[tocTree.length - 1].selector = a;
+    return a;
   }
 
   function scrollHighLight() {
-    // for (let i = 0; i < headings.length; i++) {
-    //   const heading = headings[i];
-    //   const elementToc = tocTree[i].selector;
-    //   function highlight() {
-    //     let { top, bottom } = heading.getBoundingClientRect();
-    //     bottom = Math.round(bottom) + 1;
-    //     top = Math.round(top);
-    //     const windowHeight = (window.innerHeight * 0.7 + document.documentElement.scrollTop * 0.1) - scrollMargin;
-    //     if (bottom <= windowHeight) {
-    //       setsColor("red", heading, elementToc);
-    //     }
-    //     if (bottom <= 0 || top >= windowHeight) {
-    //       setsColor("black", heading, elementToc);
-    //     }
-    //   }
-    //   // Add event listener to scroll
-    //   highlight(); // Run on load
-    //   document.addEventListener("scroll", highlight);
-    // }
-    //   const observer = new IntersectionObserver(
-    //     (entries) => {
-    //       entries.forEach((entry) => {
-    //         const tocLink = document.querySelector(`a[href="#${entry.target.id}"]`);
-    //         // Show when over rangeView
-    //         if (entry.intersectionRatio > 0) {
-    //           setsColor("red", entry.target, tocLink);
-    //         } else {
-    //           setsColor("black", entry.target, tocLink);
-    //         }
-    //       });
-    //     },
-    //     {
-    //       threshold: 0.5,
-    //       rootMargin: `${scrollMargin}px`,
-    //     }
-    //   );
-    //   headings.forEach((heading) => {
-    //     observer.observe(heading);
-    //   });
-    // }
 
-    //< Debug
+    /*< Debug
     const spacings = [];
     
     for (let i = 0; i < headings.length - 1; i++) {
@@ -148,12 +113,15 @@ function toc(props) {
       
       document.body.appendChild(div);
     }
-    ///> Debug
+    *///> Debug
+    console.log(`📕 tocTree - 133:toc.js \n`, tocTree);
     
     for (let i = 0; i < headings.length; i++) {
       const heading = headings[i];
-      const nextHeading = headings[(i + 1 < headings.length) ? i + 1 : i];
+      const safeNextIndex = (i + 1 < headings.length) ? i + 1 : i;
+      const nextHeading = headings[safeNextIndex];
       const elementToc = tocTree[i].selector;
+      const parent = tocTree[i].parent;
 
       function highlight() {
         let { bottom, top } = heading.getBoundingClientRect();
@@ -166,9 +134,11 @@ function toc(props) {
         const scopeCanView = scope - scopeSplit;
         const windowHeight = window.innerHeight;
 
-        // const scope = ((bottom + height));
         if (bottom + scopeCanView <= windowHeight && top + scopeSplit >= 0) {
           setsColor("red", heading, elementToc);
+          if (parentHighlight && parent) {
+            setsColor("red", parent);
+          }
         } else if (top + scopeSplit <= 0 || bottom > windowHeight) {
           setsColor("black", heading, elementToc);
         }
