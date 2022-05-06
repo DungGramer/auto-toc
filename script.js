@@ -5,5 +5,6 @@ document.addEventListener("DOMContentLoaded", () => {
     from: 2,
     scrollMargin: '70%',
     parentHighlight: true,
+    showLineNumbers: false,
   });
 });

@@ -5,6 +5,7 @@ function toc(props) {
   const to = props.to || 6;
   const scrollMargin = parseInt(props.scrollMargin) || 100;
   const parentHighlight = props.parentHighlight || false;
+  const showLineNumbers = props.showLineNumbers || false;
 
   const tocElement = document.querySelector(tocSelector);
   const scopeElement = document.querySelector(scope);
@@ -54,10 +55,18 @@ function toc(props) {
     return toc;
   }
 
-  function setsColor(color, ...elements) {
+  function setColor(className = 'highlight', ...elements) {
     elements.forEach((element) => {
       if (element !== undefined) {
-        element.style.color = color;
+        element.classList.add(className);
+      }
+    });
+  }
+
+  function unsetColor(className = 'highlight', ...elements) {
+    elements.forEach((element) => {
+      if (element !== undefined) {
+        element.classList.remove(className);
       }
     });
   }
@@ -110,12 +119,12 @@ function toc(props) {
         const windowHeight = window.innerHeight;
 
         if (bottom + scopeCanView <= windowHeight && top + scopeSplit >= 0) {
-          setsColor("red", heading, elementToc);
+          setColor("highlight", heading, elementToc);
           if (parentHighlight && parent) {
-            setsColor("red", parent);
+            setColor("highlight", parent);
           }
         } else if (top + scopeSplit <= 0 || bottom > windowHeight) {
-          setsColor("black", heading, elementToc);
+          unsetColor("highlight", heading, elementToc);
         }
       }
 
@@ -125,4 +134,13 @@ function toc(props) {
 
     }
   }
+
+  function showOrderListNumber() {
+    const style = document.createElement("style");
+    style.textContent = `ol { list-style-type: decimal; }`;
+
+    document.head.appendChild(style);
+  }
+
+  if (showLineNumbers) showOrderListNumber();
 }
