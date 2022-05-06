@@ -1,21 +1,26 @@
+import queryAllHeadings from "./queryAllHeadings";
+import findParentScope from "./findParentScope";
+import createTocElement from "./createTocElement";
+import scrollHighLight from "./scrollHighLight";
 
 function toc(props) {
-  const scope = props.scope || "body";
+  const contentWrapperSelector = props.contentWrapperSelector || "body";
   const tocSelector = props.tocSelector;
-  const from = props.from || 2;
-  const to = props.to || 6;
-  const scrollMargin = parseInt(props.scrollMargin) || 100;
-  const parentHighlight = props.parentHighlight || false;
+  const headingLevelFrom = props.headingLevelFrom || 2;
+  const headingLevelTo = props.headingLevelTo || 6;
+  const viewablePercentToHighlight = props.viewablePercentToHighlight || 70;
+  const showsHighLight = props.showsHighLight || false;
+  const showsParentHighlight = props.showsParentHighlight || false;
 
-  const tocElement = document.querySelector(tocSelector);
-  const scopeElement = document.querySelector(scope);
+  const tocElement = tocSelector && document.querySelector(tocSelector);
+  const scopeElement = document.querySelector(contentWrapperSelector);
 
   // Get all h-from - h-to elements
-  const headings = queryAllHeadings();
+  const headings = queryAllHeadings(headingLevelFrom, headingLevelTo, scopeElement);
 
   // Create a list to hold the headings
   const toc = document.createElement("ol");
-  const tocTree = [{ level: from, scope: toc }];
+  const tocTree = [{ level: headingLevelFrom, scope: toc }];
 
   headings.forEach((heading) => {
     const headingLevel = Number(heading.tagName.slice(1));
@@ -41,99 +46,15 @@ function toc(props) {
   tocTree.shift();
 
   // Append the list to the toc element
-  tocElement.appendChild(toc);
-
-  scrollHighLight();
-
-  function findParentScope(tocTree, level) {
-    for (let i = tocTree.length - 1; i >= 0; i--) {
-      if (tocTree[i].level === level) {
-        return tocTree[i].scope;
-      }
-    }
-
-    return toc;
+  if (tocElement) {
+    tocElement.appendChild(toc);
   }
 
-  function setColor(className = 'highlight', ...elements) {
-    elements.forEach((element) => {
-      if (element !== undefined) {
-        element.classList.add(className);
-      }
-    });
+  if (showsHighLight) {
+    scrollHighLight(headings, tocTree, viewablePercentToHighlight, showsParentHighlight);
   }
 
-  function unsetColor(className = 'highlight', ...elements) {
-    elements.forEach((element) => {
-      if (element !== undefined) {
-        element.classList.remove(className);
-      }
-    });
-  }
-
-  function queryAllHeadings() {
-    let headingSelector = "";
-    for (let i = from; i <= to; ++i) {
-      headingSelector += `h${i},`;
-    }
-
-    return scopeElement.querySelectorAll(headingSelector.slice(0, -1));
-  }
-
-  function createTocElement(selector, heading) {
-    const li = document.createElement("li");
-    const a = document.createElement("a");
-    
-    heading.id ||= `${heading.textContent
-      .replace(/\s/g, "-")
-      .toLowerCase()}-${Math.random().toString(36).substring(2, 15)}`;
-      
-    a.textContent = heading.textContent;
-    a.href = `#${heading.id}`;
-
-    // Add the link to the li item
-    li.appendChild(a);
-    selector.appendChild(li);
-
-    return a;
-  }
-
-  function scrollHighLight() {   
-    for (let i = 0; i < headings.length; i++) {
-      const heading = headings[i];
-      const safeNextIndex = (i + 1 < headings.length) ? i + 1 : i;
-      const nextHeading = headings[safeNextIndex];
-      const elementToc = tocTree[i].selector;
-      const parent = tocTree[i].parent;
-
-      function highlight() {
-        let { bottom, top } = heading.getBoundingClientRect();
-        const {marginBottom, marginTop, paddingBottom, paddingTop} = window.getComputedStyle(heading);
-        bottom = Math.round(bottom + parseInt(marginBottom) + parseInt(paddingBottom));
-        top = Math.round(top + parseInt(marginTop) + parseInt(paddingTop));
-
-        const scope = nextHeading.getBoundingClientRect().top - bottom;
-        const scopeSplit = (scope * scrollMargin) / 100;
-        const scopeCanView = scope - scopeSplit;
-
-        const windowHeight = window.innerHeight;
-
-        if (bottom + scopeCanView <= windowHeight && top + scopeSplit >= 0) {
-          setColor("highlight", heading, elementToc);
-          if (parentHighlight && parent) {
-            setColor("highlight", parent);
-          }
-        } else if (top + scopeSplit <= 0 || bottom > windowHeight) {
-          unsetColor("highlight", heading, elementToc);
-        }
-      }
-
-      // Add event listener to scroll
-      highlight(); // Run on load
-      document.addEventListener("scroll", highlight);
-
-    }
-  }
+  return toc;
 }
 
 
