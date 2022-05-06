@@ -1,3 +1,5 @@
+import toc from './toc/toc.js';
+
 document.addEventListener("DOMContentLoaded", () => {
   toc({
     scope: 'main',

@@ -1,3 +1,5 @@
+import showOrderListNumber from "./showOrderListNumber";
+
 function toc(props) {
   const scope = props.scope || "body";
   const tocSelector = props.tocSelector;
@@ -135,12 +137,8 @@ function toc(props) {
     }
   }
 
-  function showOrderListNumber() {
-    const style = document.createElement("style");
-    style.textContent = `ol { list-style-type: decimal; }`;
-
-    document.head.appendChild(style);
-  }
-
-  if (showLineNumbers) showOrderListNumber();
+  showOrderListNumber(showLineNumbers);
 }
+
+
+export default toc;
