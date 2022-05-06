@@ -1,4 +1,3 @@
-import showOrderListNumber from "./showOrderListNumber";
 
 function toc(props) {
   const scope = props.scope || "body";
@@ -7,7 +6,6 @@ function toc(props) {
   const to = props.to || 6;
   const scrollMargin = parseInt(props.scrollMargin) || 100;
   const parentHighlight = props.parentHighlight || false;
-  const showLineNumbers = props.showLineNumbers || false;
 
   const tocElement = document.querySelector(tocSelector);
   const scopeElement = document.querySelector(scope);
@@ -24,11 +22,11 @@ function toc(props) {
     const prevToc = tocTree[tocTree.length - 1];
 
     if (prevToc.level < headingLevel) {
-      const ul = document.createElement("ul");
-      const a = createTocElement(ul, heading);
+      const ol = document.createElement("ol");
+      const a = createTocElement(ol, heading);
 
-      prevToc.scope.appendChild(ul);
-      tocTree.push({ level: headingLevel, scope: ul, selector: a, parent: tocTree.at(-1).selector });
+      prevToc.scope.appendChild(ol);
+      tocTree.push({ level: headingLevel, scope: ol, selector: a, parent: tocTree.at(-1).selector });
     } else if (prevToc.level > headingLevel) {
       const parentToc = findParentScope(tocTree, headingLevel);
 
@@ -136,8 +134,6 @@ function toc(props) {
 
     }
   }
-
-  showOrderListNumber(showLineNumbers);
 }
 
 
