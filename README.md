@@ -1,39 +1,42 @@
-# Auto TOC
+# TOC Generate
 | Create a table of contents for a HTML, ESModule
 
 ### Demo
-[Demo Link](https://dunggramer.github.io/auto-toc/)
+[Demo Link](https://dunggramer.github.io/toc-generate/public/)
 
 ### Usage
 #### Script HTML
 1. Include one of the link in to HTML
 ```js
-<script src="https://dunggramer.github.io/auto-toc/dist/toc.js" defer></script>
+<script src="https://dunggramer.github.io/toc-generate/dist/toc-generate.js" defer></script>
 ```
 ```js
-<script src="https://gitcdn.xyz/cdn/DungGramer/auto-toc/master/dist/toc.js" defer></script>
-```
-```js
-<script src="https://cdn.statically.io/gh/DungGramer/auto-toc/5d26/dist/toc.js" defer></script>
+<script src="https://gitcdn.xyz/cdn/DungGramer/toc-generate/master/dist/toc-generate.js" defer></script>
 ```
 2. Call the function
 ```html
  <script>
-    toc({
-      contentWrapperSelector: "main",
-      tocSelector: "#toc",
-      showsHighLight: true,
-      showsParentHighlight: true,
+    document.addEventListener('DOMContentLoaded', function() {
+        const tableOfContent = tocGenerate({
+            contentWrapperSelector: "main",
+            headingLevelFrom: 2,
+            viewablePercentToHighlight: 70,
+            showsHighLight: true,
+            showsParentHighlight: true,
+        });
+
+        const tocSelector = document.querySelector("#toc");
+        tocSelector.appendChild(tableOfContent);
     });
-  </script>
+</script>
 ```
 
 #### ESModule
 You may not use `tocSelector` if the content is not already displayed.
 ```js
-import toc from './dist/toc.module.js';
+import tocGenerate from 'toc-generate';
 
-const tableOfContent = toc({
+const tableOfContent = tocGenerate({
     contentWrapperSelector: "main",
     headingLevelFrom: 2,
     viewablePercentToHighlight: 70,

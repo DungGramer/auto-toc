@@ -1,0 +1,8 @@
+.gitignore
+/node_modules
+index.html
+main.js
+script.js
+style.css
+pnpm-lock.yaml
+public

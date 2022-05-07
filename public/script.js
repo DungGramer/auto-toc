@@ -1,8 +1,8 @@
-// import toc from './toc/toc.js';
-import toc from './dist/toc.min.js';
+// import toc from './toc-generate/toc.js';
+import tocGenerate from '../index';
 
 document.addEventListener("DOMContentLoaded", () => {
-  const tableOfContent = toc({
+  const tableOfContent = tocGenerate({
     contentWrapperSelector: "main",
     headingLevelFrom: 2,
     viewablePercentToHighlight: 70,

@@ -243,10 +243,11 @@
 
   </main>
 
-  <!-- <script type="module" src="/main.js"></script> -->
-  <script src="./dist/toc.js"></script>
+  <!-- <script type="module" src="main.js"></script> -->
+  <script src="https://dunggramer.github.io/toc-generate/dist/toc-generate.js" defer></script>
   <script>
-    const tableOfContent = toc({
+   document.addEventListener('DOMContentLoaded', function() {
+    const tableOfContent = tocGenerate({
       contentWrapperSelector: "main",
       headingLevelFrom: 2,
       viewablePercentToHighlight: 70,
@@ -256,6 +257,7 @@
 
     const tocSelector = document.querySelector("#toc");
     tocSelector.appendChild(tableOfContent);
+  });
   </script>
 
 </body>
