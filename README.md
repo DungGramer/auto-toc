@@ -2,6 +2,7 @@
 | Create a table of contents for a HTML, ESModule
 
 ### Demo
+[Demo Link](https://dunggramer.github.io/auto-toc/)
 
 ### Usage
 #### Script HTML
@@ -10,10 +11,10 @@
 <script src="https://dunggramer.github.io/auto-toc/dist/toc.js" defer></script>
 ```
 ```js
-<script src="https://gitcdn.xyz/repo/DungGramer/auto-toc/master/dist/toc.js" defer></script>
+<script src="https://gitcdn.xyz/cdn/DungGramer/auto-toc/master/dist/toc.js" defer></script>
 ```
 ```js
-<script src="https://cdn.staticaly.com/gh/DungGramer/auto-toc/498e/dist/toc.js" defer></script>
+<script src="https://cdn.statically.io/gh/DungGramer/auto-toc/5d26/dist/toc.js" defer></script>
 ```
 2. Call the function
 ```html
