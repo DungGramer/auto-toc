@@ -1,5 +1,5 @@
 // import toc from './toc/toc.js';
-import toc from './dist/toc.js';
+import toc from './dist/toc.min.js';
 
 document.addEventListener("DOMContentLoaded", () => {
   const tableOfContent = toc({

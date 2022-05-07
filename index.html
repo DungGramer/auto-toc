@@ -243,7 +243,21 @@
 
   </main>
 
-  <script type="module" src="/main.js"></script>
+  <!-- <script type="module" src="/main.js"></script> -->
+  <script src="./dist/toc.js"></script>
+  <script>
+    const tableOfContent = toc({
+      contentWrapperSelector: "main",
+      headingLevelFrom: 2,
+      viewablePercentToHighlight: 70,
+      showsHighLight: true,
+      showsParentHighlight: true,
+    });
+
+    const tocSelector = document.querySelector("#toc");
+    tocSelector.appendChild(tableOfContent);
+  </script>
+
 </body>
 
 </html>

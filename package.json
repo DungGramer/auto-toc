@@ -8,7 +8,8 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "rollup --config rollup.config.js"
+    "build:es": "rollup --config rollup.config.js --format es --file dist/toc.module.js",
+    "build:iife": "rollup --config rollup.config.js --format iife --file dist/toc.js"
   },
   "devDependencies": {
     "rollup": "^2.72.0",
