@@ -1,14 +1,15 @@
-import toc from './toc/toc.js';
+// import toc from './toc/toc.js';
+import toc from './dist/toc.js';
 
 document.addEventListener("DOMContentLoaded", () => {
   const tableOfContent = toc({
-    contentWrapperSelector: 'main',
+    contentWrapperSelector: "main",
     headingLevelFrom: 2,
     viewablePercentToHighlight: 70,
     showsHighLight: true,
     showsParentHighlight: true,
   });
 
-  const tocSelector = document.querySelector('#toc');
+  const tocSelector = document.querySelector("#toc");
   tocSelector.appendChild(tableOfContent);
 });
