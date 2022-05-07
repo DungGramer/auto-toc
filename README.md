@@ -15,9 +15,6 @@
 ```js
 <script src="https://gitcdn.xyz/cdn/DungGramer/toc-generate/master/dist/toc-generate.js" defer></script>
 ```
-```js
-<script src="https://cdn.statically.io/gh/DungGramer/toc-generate/5d26/dist/toc-generate.js" defer></script>
-```
 2. Call the function
 ```html
  <script>
