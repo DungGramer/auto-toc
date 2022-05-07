@@ -1,19 +1,37 @@
 {
-  "name": "auto-toc",
+  "name": "toc-generate",
+  "description": "Generate a table of contents ",
   "author": {
     "name": "DungGramer",
     "email": "dung.dev.gramer@gmail.com",
     "url": "https://dunggramer.com"
   },
   "version": "1.0.0",
+  "main": "index.js",
   "scripts": {
     "dev": "vite",
-    "build:es": "rollup --config rollup.config.js --format es --file dist/toc.module.js",
-    "build:iife": "rollup --config rollup.config.js --format iife --file dist/toc.js"
+    "build:es": "rollup --config rollup.config.js --format es --file dist/toc-generate.module.js",
+    "build:iife": "rollup --config rollup.config.js --format iife --file dist/toc-generate.js"
   },
   "devDependencies": {
     "rollup": "^2.72.0",
     "rollup-plugin-terser": "^7.0.2",
     "vite": "^2.9.7"
-  }
+  },
+  "repository": {
+    "url": "git://github.com/DungGramer/toc-generate.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DungGramer/toc-generate/issues"
+  },
+  "license": "MIT",
+  "keywords": [
+    "toc",
+    "table of contents",
+    "table of contents generator",
+    "generate table of contents",
+    "table of contents generator js",
+    "table of contents generator js library",
+    "table of contents generator js library react"
+  ]
 }

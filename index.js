@@ -1,0 +1,1 @@
+export { default, default as tocGenerate } from './dist/toc-generate.module';

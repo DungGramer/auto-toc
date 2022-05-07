@@ -3,7 +3,7 @@ import findParentScope from "./findParentScope";
 import createTocElement from "./createTocElement";
 import scrollHighLight from "./scrollHighLight";
 
-function toc(props) {
+function tocGenerate(props) {
   const contentWrapperSelector = props.contentWrapperSelector || "body";
   const tocSelector = props.tocSelector;
   const headingLevelFrom = props.headingLevelFrom || 2;
@@ -58,4 +58,4 @@ function toc(props) {
 }
 
 
-export default toc;
+export default tocGenerate;
