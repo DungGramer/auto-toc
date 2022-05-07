@@ -3,7 +3,11 @@ lockfileVersion: 5.4
 specifiers:
   rollup: ^2.72.0
   rollup-plugin-terser: ^7.0.2
+  toc-generate: ^1.0.1
   vite: ^2.9.7
+
+dependencies:
+  toc-generate: 1.0.1
 
 devDependencies:
   rollup: 2.72.0
@@ -472,6 +476,10 @@ packages:
       source-map: 0.8.0-beta.0
       source-map-support: 0.5.21
     dev: true
+
+  /toc-generate/1.0.1:
+    resolution: {integrity: sha512-MqZ07vygfV+vgX+2qXXgq0OMIPmakC7N7wp3iSY1qYNe/JpUk++/HPRYIIedk6WxscdYFKZEMvZeIJUia+ltlQ==}
+    dev: false
 
   /tr46/1.0.1:
     resolution: {integrity: sha1-qLE/1r/SSJUZZ0zN5VujaTtwbQk=}

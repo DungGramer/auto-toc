@@ -1,7 +1,7 @@
 import { terser } from "rollup-plugin-terser";
 
 export default {
-  input: 'toc-generate/tocGenerate.js',
+  input: 'src/tocGenerate.js',
   output: {
     file: 'dist/toc-generate.js',
     name: 'tocGenerate',

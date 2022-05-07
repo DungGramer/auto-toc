@@ -1,5 +1,4 @@
-// import toc from './toc-generate/toc.js';
-import tocGenerate from '../index';
+import tocGenerate from '../dist/toc-generate.module';
 
 document.addEventListener("DOMContentLoaded", () => {
   const tableOfContent = tocGenerate({
@@ -7,7 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
     headingLevelFrom: 2,
     viewablePercentToHighlight: 70,
     showsHighLight: true,
-    showsParentHighlight: true,
   });
 
   const tocSelector = document.querySelector("#toc");
